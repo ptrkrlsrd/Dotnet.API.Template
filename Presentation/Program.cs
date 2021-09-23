@@ -8,7 +8,7 @@ namespace Template.API
 {
     public class Program
     {
-        private static string ApplicationName = nameof(Template.API);
+        public static string ApplicationName = "Template.API";
         public static void Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
@@ -33,6 +33,8 @@ namespace Template.API
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>());
+                .ConfigureWebHostDefaults(webBuilder => webBuilder
+                    .UseKestrel()
+                    .UseStartup<Startup>());
     }
 }
