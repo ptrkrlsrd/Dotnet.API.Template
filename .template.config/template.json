@@ -1,0 +1,23 @@
+{
+    "author": "Petter Karlsrud",
+    "name": "API Template",
+    "description": "Clean Architecture",
+    "identity": "ptrkrlsrd.CleanArchitectureTemplate.1.0",
+    "shortName": "clean",
+    "tags": {
+        "language": "C#",
+        "type": "project"
+    },
+    "sourceName": "API",
+    "symbols": {
+        "Framework": {
+            "type": "parameter",
+            "description": "The target framework for the project.",
+            "datatype": "choice",
+            "choices": [{
+                "choice": "net5.0"
+            }],
+            "defaultValue": "net5.0"
+        }
+    }
+}
