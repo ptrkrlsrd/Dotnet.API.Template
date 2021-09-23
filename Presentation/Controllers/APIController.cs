@@ -2,9 +2,9 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Template.Application.Commands;
+using Template.API.Application.Queries;
 
-namespace Template.Presentation.Controllers
+namespace Template.API.Presentation.Controllers
 {
     [ApiController]
     [Route("[controller]")]
@@ -20,11 +20,6 @@ namespace Template.Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Get()
-        {
-            string result = await _mediator.Send(new PingCommand());
-            _logger.LogInformation("returning {Result}", result);
-            return Ok(result);
-        }
+        public async Task<ActionResult> Get() => Ok(await _mediator.Send(new PingQuery()));
     }
 }
