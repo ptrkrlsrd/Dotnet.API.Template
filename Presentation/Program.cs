@@ -15,7 +15,7 @@ namespace Template.API
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
-                .CreateBootstrapLogger();
+                .CreateLogger();
             try
             {
                 Log.Information("{ApplicationName} is starting", ApplicationName);

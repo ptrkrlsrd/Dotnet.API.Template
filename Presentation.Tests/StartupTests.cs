@@ -29,12 +29,12 @@ namespace Template.API.Application.Tests
         }
         
         [Fact]
-        public void UrlShouldNotHaveVerbs()
+        public void RouteShouldNotHaveVerbs()
         {
             var service = _server.Host.Services.GetService(typeof(IActionDescriptorCollectionProvider)) as IActionDescriptorCollectionProvider;
             Assert.NotNull(service);
             
-            string[] verbs = { "create", "get", "post", "put", "delete", "fetch" };
+            string[] verbs = { "create", "get", "post", "put", "delete", "fetch", "generate" };
             
             Regex rx = new Regex($"({string.Join("|", verbs)})", RegexOptions.Compiled | RegexOptions.IgnoreCase);
             
