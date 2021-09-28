@@ -1,6 +1,8 @@
+using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -35,12 +37,19 @@ namespace Template.API
             if (Configuration.GetSection("Tracing").GetValue<bool>("Enabled"))
                 services.AddOpenTelemetry(Program.ApplicationName, new []{ MediatrConstants.ActivitySourceName});
             
-            if (Configuration.GetSection("Mediatr:Middleware").GetValue<bool>("Tracing"))
+            var mediatrMiddlewareSection = Configuration.GetSection("Mediatr:Middleware");
+            if (mediatrMiddlewareSection.GetValue<bool>("Tracing"))
                 services.AddTracingMiddleware();
             
-            if (Configuration.GetSection("Mediatr:Middleware").GetValue<bool>("Logging"))
+            if (mediatrMiddlewareSection.GetValue<bool>("Logging"))
                 services.AddLoggingMiddleware();
 
+            services.AddResponseCompression(options =>
+            {
+                options.Providers.Add<BrotliCompressionProvider>();
+                options.Providers.Add<GzipCompressionProvider>();
+                options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[] { "image/svg+xml" });
+            });
             
             services.AddSingleton(Configuration);
             
@@ -71,6 +80,8 @@ namespace Template.API
             }
             
             app.UseMiddleware<ErrorHandlerMiddleware>();
+            
+            app.UseResponseCompression();
 
             app.UseHttpsRedirection();
 

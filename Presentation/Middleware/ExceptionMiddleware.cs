@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace Template.API.Presentation.Middleware
 {
@@ -36,6 +37,7 @@ namespace Template.API.Presentation.Middleware
                         response.StatusCode = (int)HttpStatusCode.InternalServerError;
                         break;
                 }
+                Log.Warning(error?.Message);
 
                 var result = JsonSerializer.Serialize(new { message = error?.Message });
                 await response.WriteAsync(result);
