@@ -32,7 +32,7 @@ namespace Template.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMediatrHandlers();
+            services.AddApplicationLayer();
             
             if (Configuration.GetSection("Tracing").GetValue<bool>("Enabled"))
                 services.AddOpenTelemetry(Program.ApplicationName, new []{ MediatrConstants.ActivitySourceName});

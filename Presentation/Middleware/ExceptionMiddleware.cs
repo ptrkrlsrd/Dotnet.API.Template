@@ -37,6 +37,7 @@ namespace Template.API.Presentation.Middleware
                         response.StatusCode = (int)HttpStatusCode.InternalServerError;
                         break;
                 }
+                
                 Log.Warning(error?.Message);
 
                 var result = JsonSerializer.Serialize(new { message = error?.Message });

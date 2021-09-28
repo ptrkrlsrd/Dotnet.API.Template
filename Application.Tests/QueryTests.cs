@@ -13,7 +13,8 @@ namespace Template.API.Application.Tests
         public async Task PongQuery_Equals_Pong()
         {
             var mediator = new  Mock<IMediator>();
-            mediator.Setup(m => m.Send(It.IsAny<PingQuery>(), default)).Verifiable("Notification was not sent.");
+            mediator.Setup(m => m.Send(It.IsAny<PingQuery>(), default))
+                .Verifiable("Notification was not sent.");
 
             PingQuery query = new PingQuery();
             PingQueryHandler handler = new PingQueryHandler();
