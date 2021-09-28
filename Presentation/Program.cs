@@ -34,6 +34,7 @@ namespace Template.API
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder => webBuilder
+                    .UseSerilog()
                     .UseKestrel()
                     .UseStartup<Startup>());
     }
