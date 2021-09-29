@@ -14,12 +14,16 @@ COPY ["Presentation/Presentation.csproj", "Presentation/"]
 COPY ["Presentation.Tests/Presentation.Tests.csproj", "Presentation.Tests/"]
 COPY ["Application/Application.csproj", "Application/"]
 COPY ["Application.Tests/Application.Tests.csproj", "Application.Tests/"]
+COPY ["Infrastructure/Infrastructure.csproj", "Infrastructure/"]
+COPY ["Infrastructure.Tests/Infrastructure.Tests.csproj", "Infrastructure.Tests/"]
 COPY ["API.Template.sln", "."]
 RUN dotnet restore 
 
 COPY . .
 WORKDIR "/src/Presentation"
-RUN dotnet build "Presentation.csproj" -c Release -o /app/build
+
+FROM build AS test
+RUN dotnet test
 
 FROM build AS publish
 RUN dotnet publish "Presentation.csproj" -c Release -o /app/publish
