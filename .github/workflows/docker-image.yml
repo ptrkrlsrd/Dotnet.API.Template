@@ -7,7 +7,8 @@ on:
     branches: [ main ]
 
 env:
-  docker-image_name: dotnet-template
+  DOCKER_IMAGE_NAME: dotnet-template
+  DOCKER_IMAGE_TAG: $(date +%s)
   
     
 jobs:
@@ -17,4 +18,4 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag $docker-image_name:$(date +%s)
+      run: docker build . --file Dockerfile --tag $DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
