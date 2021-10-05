@@ -8,7 +8,6 @@ on:
 
 env:
   docker-image_name: dotnet-template
-  docker-image_tag: $(date +%s)
   
     
 jobs:
@@ -18,4 +17,4 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag $docker-image_name:$docker-image_tag
+      run: docker build . --file Dockerfile --tag $docker-image_name:$(date +%s)
