@@ -6,13 +6,16 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  docker-image_name: dotnet-template
+  docker-image_tag: $(date +%s)
+  
+    
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag dotnet-template:$(date +%s)
+      run: docker build . --file Dockerfile --tag $(docker-image_name):$(docker-image_tag)
