@@ -1,5 +1,5 @@
-/obj/*
-/bin/*
 *.dll
 .idea/
-/out/
+**/out/**
+**/bin/**
+**/obj/**
