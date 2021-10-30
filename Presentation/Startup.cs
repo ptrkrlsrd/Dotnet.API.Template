@@ -1,4 +1,3 @@
-using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -81,7 +80,7 @@ namespace Template.API
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint(
-                    $"/swagger/{_version.MajorVersion.ToString()}/swagger.json", 
+                    $"/swagger/{_version.MajorVersion}/swagger.json", 
                     $"{Program.ApplicationName} {_version}")
                 );
             }

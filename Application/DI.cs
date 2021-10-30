@@ -12,7 +12,7 @@ namespace Template.API.Application.DI
         public static IServiceCollection AddApplicationLayer(this IServiceCollection services)
         {
             services.AddMediatR(typeof(PingQuery).GetTypeInfo().Assembly);
-            services.RegisterInfrastructure();
+            services.RegisterInfrastructure(); // Fix this
             return services;
         }
 
