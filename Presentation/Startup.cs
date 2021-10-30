@@ -56,7 +56,6 @@ namespace Template.API
             {
                 options.Providers.Add<BrotliCompressionProvider>();
                 options.Providers.Add<GzipCompressionProvider>();
-                options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[] { "image/svg+xml" });
             });
             
             services.AddSingleton(Configuration);
