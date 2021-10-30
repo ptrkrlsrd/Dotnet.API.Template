@@ -33,10 +33,10 @@ namespace Template.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var mediatrConfig = new MediatRConfig();
+            var mediatrConfig = new MediatRConfiguration();
             Configuration.GetSection("MediatR").Bind(mediatrConfig);
 
-            var tracingConf = new TracingConf();
+            var tracingConf = new TracingConfiguration();
             Configuration.GetSection("Tracing").Bind(tracingConf);
 
             services.Configure<AppsettingsConfiguration>(Configuration);

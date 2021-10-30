@@ -8,22 +8,22 @@ namespace Template.API.Presentation.Configuration
         public LoggingConf Logging { get; set; }
 
         [JsonProperty("Tracing")]
-        public TracingConf Tracing { get; set; }
+        public TracingConfiguration Tracing { get; set; }
 
         [JsonProperty("Mediatr")]
-        public MediatRConfig Mediatr { get; set; }
+        public MediatRConfiguration Mediatr { get; set; }
 
         [JsonProperty("AllowedHosts")]
         public string AllowedHosts { get; set; }
     }
 
-    public class LoggingConf
+    public class LoggingConfiguration
     {
         [JsonProperty("LogLevel")]
         public LogLevelConf LogLevel { get; set; }
     }
 
-    public class LogLevelConf
+    public class LogLevelConfiguration
     {
         [JsonProperty("Default")]
         public string Default { get; set; }
@@ -35,7 +35,7 @@ namespace Template.API.Presentation.Configuration
         public string MicrosoftHostingLifetime { get; set; }
     }
 
-    public class MediatRConfig
+    public class MediatRConfiguration
     {
         [JsonProperty("Middleware")]
         public MediatRMiddlewareConf Middleware { get; set; }
@@ -50,7 +50,7 @@ namespace Template.API.Presentation.Configuration
         public bool Logging { get; set; }
     }
 
-    public class TracingConf
+    public class TracingConfiguration
     {
         [JsonProperty("Enabled")]
         public bool Enabled { get; set; }
