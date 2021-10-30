@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Template.API.Application.Behavior;
 using Template.API.Application.DI;
+using Template.API.Presentation.Configuration;
 using Template.API.Presentation.Middleware;
 
 namespace Template.API
@@ -32,16 +33,23 @@ namespace Template.API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var mediatrConfig = new MediatRConfig();
+            Configuration.GetSection("MediatR").Bind(mediatrConfig);
+
+            var tracingConf = new TracingConf();
+            Configuration.GetSection("Tracing").Bind(tracingConf);
+
+            services.Configure<AppsettingsConfiguration>(Configuration);
+
             services.AddApplicationLayer();
             
-            if (Configuration.GetSection("Tracing").GetValue<bool>("Enabled"))
+            if (tracingConf.Enabled)
                 services.AddOpenTelemetry(Program.ApplicationName, new []{ MediatrConstants.ActivitySourceName});
             
-            var mediatrMiddlewareSection = Configuration.GetSection("Mediatr:Middleware");
-            if (mediatrMiddlewareSection.GetValue<bool>("Tracing"))
+            if (mediatrConfig.Middleware.Tracing)
                 services.AddTracingMiddleware();
             
-            if (mediatrMiddlewareSection.GetValue<bool>("Logging"))
+            if (mediatrConfig.Middleware.Logging)
                 services.AddLoggingMiddleware();
 
             services.AddResponseCompression(options =>
