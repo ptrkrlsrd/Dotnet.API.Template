@@ -1,4 +1,3 @@
-using System.Reflection;
 using Template.Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 

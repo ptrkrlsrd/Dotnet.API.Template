@@ -5,7 +5,7 @@ namespace Template.API.Presentation.Configuration
     public class AppsettingsConfiguration
     {
         [JsonProperty("Logging")]
-        public LoggingConf Logging { get; set; }
+        public LoggingConfiguration Logging { get; set; }
 
         [JsonProperty("Tracing")]
         public TracingConfiguration Tracing { get; set; }
@@ -20,7 +20,7 @@ namespace Template.API.Presentation.Configuration
     public class LoggingConfiguration
     {
         [JsonProperty("LogLevel")]
-        public LogLevelConf LogLevel { get; set; }
+        public LogLevelConfiguration LogLevel { get; set; }
     }
 
     public class LogLevelConfiguration
