@@ -2,7 +2,6 @@
 ## Features
 * MediatR (with optional logging and tracing middleware)
 * OpenTelemetry (optional)
-* Serilog
 ## Layers (simplified) 
 1. Presentation
 2. Application
