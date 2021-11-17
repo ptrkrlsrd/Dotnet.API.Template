@@ -32,6 +32,8 @@ namespace Template.API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton(Configuration);
+
             var mediatrConfig = new MediatRConfiguration();
             Configuration.GetSection("MediatR").Bind(mediatrConfig);
 
@@ -56,9 +58,7 @@ namespace Template.API
                 options.Providers.Add<BrotliCompressionProvider>();
                 options.Providers.Add<GzipCompressionProvider>();
             });
-            
-            services.AddSingleton(Configuration);
-            
+
             services.AddApiVersioning(options =>
             {
                 options.AssumeDefaultVersionWhenUnspecified = true;
@@ -66,10 +66,10 @@ namespace Template.API
             });
             
             services.AddControllers(options => options.Filters.Add(typeof(ExceptionFilter)));
-            services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(options =>
             {
                 var majorVersion = _version.MajorVersion.ToString();
-                c.SwaggerDoc(majorVersion, new OpenApiInfo { Title = Program.ApplicationName, Version = majorVersion });
+                options.SwaggerDoc(majorVersion, new OpenApiInfo { Title = Program.ApplicationName, Version = majorVersion });
             });
         }
 
