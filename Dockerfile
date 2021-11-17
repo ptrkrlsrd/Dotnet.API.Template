@@ -28,6 +28,9 @@ RUN dotnet test
 FROM build AS publish
 RUN dotnet publish "Presentation.csproj" -c Release -o /app/publish
 
+FROM build AS benchmark
+RUN dotnet run -c Release --project Presentation.Benchmarks/Presentation.Benchmarks.csproj
+
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
