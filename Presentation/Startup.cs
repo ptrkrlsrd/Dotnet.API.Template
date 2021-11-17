@@ -79,7 +79,7 @@ namespace Template.API
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint(
+                app.UseSwaggerUI(options => options.SwaggerEndpoint(
                     $"/swagger/{_version.MajorVersion}/swagger.json", 
                     $"{Program.ApplicationName} {_version}")
                 );

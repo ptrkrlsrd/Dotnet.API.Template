@@ -25,7 +25,7 @@ namespace Template.API.Application.Tests
             var response = await _client.GetAsync("/API");
             response.EnsureSuccessStatusCode();
             var responseString = await response.Content.ReadAsStringAsync();
-            Assert.Equal("Pong", responseString);
+            Assert.Equal(@"""Pong""", responseString);
         }
         
         [Fact]
@@ -49,4 +49,3 @@ namespace Template.API.Application.Tests
     }
 
 }
-

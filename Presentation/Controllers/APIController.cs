@@ -21,10 +21,10 @@ namespace Template.API.Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Get() => Ok(await _mediator.Send(new PingQuery()));
+        public async Task<JsonResult> Get() => new(await _mediator.Send(new PingQuery()));
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] PingCommand command)
+        public async Task<OkResult> Post([FromBody] PingCommand command)
         {
             await _mediator.Send(command);
             return Ok();
