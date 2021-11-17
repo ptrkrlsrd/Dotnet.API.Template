@@ -41,13 +41,13 @@ namespace Template.API
             services.Configure<AppsettingsConfiguration>(Configuration);
 
             services.AddApplicationLayer();
-            
+
             if (tracingConf.Enabled)
                 services.AddOpenTelemetry(Program.ApplicationName, new []{ MediatrConstants.ActivitySourceName});
-            
-            if (mediatrConfig.Middleware.Tracing)
+
+            if (tracingConf.Enabled && mediatrConfig.Middleware.Tracing)
                 services.AddTracingMiddleware();
-            
+
             if (mediatrConfig.Middleware.Logging)
                 services.AddLoggingMiddleware();
 
