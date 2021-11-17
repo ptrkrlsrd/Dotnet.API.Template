@@ -17,7 +17,6 @@
     </Target>
 
     <ItemGroup>
-        <PackageReference Include="BenchmarkDotNet" Version="0.13.1" />
         <PackageReference Include="FakeItEasy" Version="7.1.0" />
         <PackageReference Include="FluentAssertions" Version="5.10.3" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="5.0.7" />
