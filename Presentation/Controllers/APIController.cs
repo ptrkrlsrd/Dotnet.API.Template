@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -21,11 +22,11 @@ namespace Template.API.Presentation.Controllers
 
         [HttpGet]
         public async Task<ActionResult> Get() => Ok(await _mediator.Send(new PingQuery()));
-        
+
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] PingCommand command)
         {
-            await _mediator.Send(new PingCommand());
+            await _mediator.Send(command);
             return Ok();
         }
     }

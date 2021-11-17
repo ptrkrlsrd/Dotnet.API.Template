@@ -1,48 +1,40 @@
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Serilog;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace Template.API.Presentation.Middleware
 {
-    public class ErrorHandlerMiddleware
+    public class ExceptionFilter : IExceptionFilter
     {
-        private readonly RequestDelegate _next;
+        private readonly IWebHostEnvironment _hostingEnvironment;
+        private readonly IModelMetadataProvider _modelMetadataProvider;
+        private readonly ILogger<ExceptionFilter> _logger;
 
-        public ErrorHandlerMiddleware(RequestDelegate next)
+        public ExceptionFilter(
+            IWebHostEnvironment hostingEnvironment,
+            ILogger<ExceptionFilter> logger,
+            IModelMetadataProvider modelMetadataProvider)
         {
-            _next = next;
+            _hostingEnvironment = hostingEnvironment;
+            _logger = logger;
+            _modelMetadataProvider = modelMetadataProvider;
         }
 
-        public async Task Invoke(HttpContext context)
+        public void OnException(ExceptionContext context)
         {
-            try
-            {
-                await _next(context);
-            }
-            catch (Exception error)
-            {
-                var response = context.Response;
-                response.ContentType = "application/json";
+            _logger.LogWarning("An unhandled exception occured: {Message}", context.Exception.Message);
 
-                switch(error)
-                {
-                    case KeyNotFoundException:
-                        response.StatusCode = (int)HttpStatusCode.NotFound;
-                        break;
-                    default:
-                        response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                        break;
-                }
-                
-                Log.Warning(error?.Message);
+            string message = _hostingEnvironment.IsDevelopment() ? context.Exception.Message : "Internal server error";
 
-                var result = JsonSerializer.Serialize(new { message = error?.Message });
-                await response.WriteAsync(result);
-            }
+            context.Result = new JsonResult(message)
+            {
+                StatusCode = (int)HttpStatusCode.InternalServerError
+            };
         }
     }
 }

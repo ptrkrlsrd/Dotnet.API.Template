@@ -65,7 +65,7 @@ namespace Template.API
                 options.DefaultApiVersion = new ApiVersion(1, 0);
             });
             
-            services.AddControllers();
+            services.AddControllers(options => options.Filters.Add(typeof(ExceptionFilter)));
             services.AddSwaggerGen(c =>
             {
                 var majorVersion = _version.MajorVersion.ToString();
@@ -84,8 +84,6 @@ namespace Template.API
                     $"{Program.ApplicationName} {_version}")
                 );
             }
-            
-            app.UseMiddleware<ErrorHandlerMiddleware>();
             
             app.UseResponseCompression();
 
