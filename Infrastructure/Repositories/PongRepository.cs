@@ -1,4 +1,4 @@
-﻿namespace Template.Infrastructure.Repositories
+﻿namespace Template.Infrastructure.Repositories;
 
 public interface IPongRepository
 {
