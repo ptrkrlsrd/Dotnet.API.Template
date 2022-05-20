@@ -1,8 +1,7 @@
-namespace Template.API.Application.Behavior
+namespace Template.API.Application.Behavior;
+
+public static class MediatrConstants
 {
-    public static class MediatrConstants
-    {
-        public static string ActivitySourceName = "MediatR";
-        public static string DefaultActivityName = "MediatR";
-    }
+    public static string ActivitySourceName = "MediatR";
+    public static string DefaultActivityName = "MediatR";
 }

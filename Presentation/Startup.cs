@@ -11,89 +11,88 @@ using Template.API.Application.DI;
 using Template.API.Presentation.Configuration;
 using Template.API.Presentation.Middleware;
 
-namespace Template.API
+namespace Template.API;
+
+public class Startup
 {
-    public class Startup
+    private readonly ApiVersion _version = new(1, 0);
+
+    public Startup(IWebHostEnvironment env)
     {
-        private readonly ApiVersion _version = new(1, 0);
+        var configurationBuilder = new ConfigurationBuilder()
+            .SetBasePath(env.ContentRootPath)
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+            .AddEnvironmentVariables();
+        
+        Configuration = configurationBuilder.Build();
+    }
 
-        public Startup(IWebHostEnvironment env)
+    private IConfiguration Configuration { get; }
+
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddSingleton(Configuration);
+
+        var mediatrConfig = new MediatRConfiguration();
+        Configuration.GetSection("MediatR").Bind(mediatrConfig);
+
+        var tracingConf = new TracingConfiguration();
+        Configuration.GetSection("Tracing").Bind(tracingConf);
+
+        services.Configure<AppsettingsConfiguration>(Configuration);
+
+        services.AddApplicationLayer();
+
+        if (tracingConf.Enabled)
+            services.AddOpenTelemetry(Program.ApplicationName, new []{ MediatrConstants.ActivitySourceName});
+
+        if (tracingConf.Enabled && mediatrConfig.Middleware.Tracing)
+            services.AddTracingMiddleware();
+
+        if (mediatrConfig.Middleware.Logging)
+            services.AddLoggingMiddleware();
+
+        services.AddResponseCompression(options =>
         {
-            var configurationBuilder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
-            
-            Configuration = configurationBuilder.Build();
-        }
+            options.Providers.Add<BrotliCompressionProvider>();
+            options.Providers.Add<GzipCompressionProvider>();
+        });
 
-        private IConfiguration Configuration { get; }
-
-        public void ConfigureServices(IServiceCollection services)
+        services.AddApiVersioning(options =>
         {
-            services.AddSingleton(Configuration);
-
-            var mediatrConfig = new MediatRConfiguration();
-            Configuration.GetSection("MediatR").Bind(mediatrConfig);
-
-            var tracingConf = new TracingConfiguration();
-            Configuration.GetSection("Tracing").Bind(tracingConf);
-
-            services.Configure<AppsettingsConfiguration>(Configuration);
-
-            services.AddApplicationLayer();
-
-            if (tracingConf.Enabled)
-                services.AddOpenTelemetry(Program.ApplicationName, new []{ MediatrConstants.ActivitySourceName});
-
-            if (tracingConf.Enabled && mediatrConfig.Middleware.Tracing)
-                services.AddTracingMiddleware();
-
-            if (mediatrConfig.Middleware.Logging)
-                services.AddLoggingMiddleware();
-
-            services.AddResponseCompression(options =>
-            {
-                options.Providers.Add<BrotliCompressionProvider>();
-                options.Providers.Add<GzipCompressionProvider>();
-            });
-
-            services.AddApiVersioning(options =>
-            {
-                options.AssumeDefaultVersionWhenUnspecified = true;
-                options.DefaultApiVersion = new ApiVersion(1, 0);
-            });
-            
-            services.AddControllers(options => options.Filters.Add(typeof(ExceptionFilter)));
-            services.AddSwaggerGen(options =>
-            {
-                var majorVersion = _version.MajorVersion.ToString();
-                options.SwaggerDoc(majorVersion, new OpenApiInfo { Title = Program.ApplicationName, Version = majorVersion });
-            });
-        }
-
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+            options.AssumeDefaultVersionWhenUnspecified = true;
+            options.DefaultApiVersion = new ApiVersion(1, 0);
+        });
+        
+        services.AddControllers(options => options.Filters.Add(typeof(ExceptionFilter)));
+        services.AddSwaggerGen(options =>
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(options => options.SwaggerEndpoint(
-                    $"/swagger/{_version.MajorVersion}/swagger.json", 
-                    $"{Program.ApplicationName} {_version}")
-                );
-            }
-            
-            app.UseResponseCompression();
+            var majorVersion = _version.MajorVersion.ToString();
+            options.SwaggerDoc(majorVersion, new OpenApiInfo { Title = Program.ApplicationName, Version = majorVersion });
+        });
+    }
 
-            app.UseHttpsRedirection();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints => endpoints.MapControllers());
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        if (env.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+            app.UseSwagger();
+            app.UseSwaggerUI(options => options.SwaggerEndpoint(
+                $"/swagger/{_version.MajorVersion}/swagger.json", 
+                $"{Program.ApplicationName} {_version}")
+            );
         }
+        
+        app.UseResponseCompression();
+
+        app.UseHttpsRedirection();
+
+        app.UseRouting();
+
+        app.UseAuthorization();
+
+        app.UseEndpoints(endpoints => endpoints.MapControllers());
     }
 }

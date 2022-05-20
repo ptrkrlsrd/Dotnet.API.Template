@@ -3,21 +3,20 @@ using System.Threading.Tasks;
 using Template.Infrastructure.Repositories;
 using MediatR;
 
-namespace Template.API.Application.Queries
+namespace Template.API.Application.Queries;
+
+public class PingCommand : IRequest<string> { }
+
+public class PingCommandHandler : IRequestHandler<PingCommand, string>
 {
-    public class PingCommand : IRequest<string> { }
+    private readonly IPongRepository _pongRepository;
 
-    public class PingCommandHandler : IRequestHandler<PingCommand, string>
+    public PingCommandHandler(IPongRepository pongRepository)
     {
-        private readonly IPongRepository _pongRepository;
-
-        public PingCommandHandler(IPongRepository pongRepository)
-        {
-            _pongRepository = pongRepository;
-        }
-        public Task<string> Handle(PingCommand request, CancellationToken cancellationToken)
-        {
-            return Task.FromResult(_pongRepository.Get());
-        }
+        _pongRepository = pongRepository;
+    }
+    public Task<string> Handle(PingCommand request, CancellationToken cancellationToken)
+    {
+        return Task.FromResult(_pongRepository.Get());
     }
 }

@@ -7,34 +7,33 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Template.API.Presentation.Middleware
+namespace Template.API.Presentation.Middleware;
+
+public class ExceptionFilter : IExceptionFilter
 {
-    public class ExceptionFilter : IExceptionFilter
+    private readonly IWebHostEnvironment _hostingEnvironment;
+    private readonly IModelMetadataProvider _modelMetadataProvider;
+    private readonly ILogger<ExceptionFilter> _logger;
+
+    public ExceptionFilter(
+        IWebHostEnvironment hostingEnvironment,
+        ILogger<ExceptionFilter> logger,
+        IModelMetadataProvider modelMetadataProvider)
     {
-        private readonly IWebHostEnvironment _hostingEnvironment;
-        private readonly IModelMetadataProvider _modelMetadataProvider;
-        private readonly ILogger<ExceptionFilter> _logger;
+        _hostingEnvironment = hostingEnvironment;
+        _logger = logger;
+        _modelMetadataProvider = modelMetadataProvider;
+    }
 
-        public ExceptionFilter(
-            IWebHostEnvironment hostingEnvironment,
-            ILogger<ExceptionFilter> logger,
-            IModelMetadataProvider modelMetadataProvider)
+    public void OnException(ExceptionContext context)
+    {
+        _logger.LogWarning("An unhandled exception occured: {Message}", context.Exception.Message);
+
+        string message = _hostingEnvironment.IsDevelopment() ? context.Exception.Message : "Internal server error";
+
+        context.Result = new JsonResult(message)
         {
-            _hostingEnvironment = hostingEnvironment;
-            _logger = logger;
-            _modelMetadataProvider = modelMetadataProvider;
-        }
-
-        public void OnException(ExceptionContext context)
-        {
-            _logger.LogWarning("An unhandled exception occured: {Message}", context.Exception.Message);
-
-            string message = _hostingEnvironment.IsDevelopment() ? context.Exception.Message : "Internal server error";
-
-            context.Result = new JsonResult(message)
-            {
-                StatusCode = (int)HttpStatusCode.InternalServerError
-            };
-        }
+            StatusCode = (int)HttpStatusCode.InternalServerError
+        };
     }
 }
