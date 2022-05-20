@@ -1,12 +1,11 @@
 ﻿namespace Template.Infrastructure.Repositories
+
+public interface IPongRepository
 {
-    public interface IPongRepository
-    {
-        string Get();
-    }
-    
-    public class PongRepository : IPongRepository
-    {
-        public string Get() => "Pong";
-    }
+    string Get();
+}
+
+public class PongRepository : IPongRepository
+{
+    public string Get() => "Pong";
 }
