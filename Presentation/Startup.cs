@@ -75,24 +75,18 @@ public class Startup
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        if (env.IsDevelopment())
-        {
-            app.UseDeveloperExceptionPage();
-            app.UseSwagger();
-            app.UseSwaggerUI(options => options.SwaggerEndpoint(
-                $"/swagger/{_version.MajorVersion}/swagger.json", 
-                $"{Program.ApplicationName} {_version}")
-            );
-        }
+        app.AddIf(env.IsDevelopment(), 
+            x => x.UseDeveloperExceptionPage()
+                .UseSwagger()
+                .UseSwaggerUI(options => options.SwaggerEndpoint(
+                    $"/swagger/{_version.MajorVersion}/swagger.json", 
+                    $"{Program.ApplicationName} {_version}")
+                ));
         
-        app.UseResponseCompression();
-
-        app.UseHttpsRedirection();
-
-        app.UseRouting();
-
-        app.UseAuthorization();
-
-        app.UseEndpoints(endpoints => endpoints.MapControllers());
+        app.UseResponseCompression()
+        .UseHttpsRedirection()
+        .UseRouting()
+        .UseAuthorization()
+        .UseEndpoints(endpoints => endpoints.MapControllers());
     }
 }
