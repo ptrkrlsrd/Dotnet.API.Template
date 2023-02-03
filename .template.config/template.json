@@ -1,5 +1,5 @@
 {
-  "author": "Petter Karlsrud",
+  "author": "ptrkrlsrd",
   "name": "API Template",
   "description": "Clean Architecture",
   "identity": "ptrkrlsrd.CleanArchitectureTemplate.1.0",
@@ -22,9 +22,9 @@
       "description": "The target framework for the project.",
       "datatype": "choice",
       "choices": [{
-        "choice": "net6.0"
+        "choice": "net7.0"
       }],
-      "defaultValue": "net6.0"
+      "defaultValue": "net7.0"
     }
   }
 }

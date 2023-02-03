@@ -1,14 +1,4 @@
-FROM mcr.microsoft.com/dotnet/aspnet:6.0-focal AS base
-WORKDIR /app
-EXPOSE 5000
-EXPOSE 5001
-
-ENV ASPNETCORE_URLS=http://+:5000;https://+:5001
-
-RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
-USER appuser
-
-FROM mcr.microsoft.com/dotnet/sdk:6.0-focal AS build
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["Presentation/Presentation.csproj", "Presentation/"]
 COPY ["Presentation.Tests/Presentation.Tests.csproj", "Presentation.Tests/"]
@@ -28,7 +18,16 @@ RUN dotnet test
 FROM build AS publish
 RUN dotnet publish "Presentation.csproj" -c Release -o /app/publish
 
-FROM base AS final
+FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
+WORKDIR /app
+EXPOSE 5000
+EXPOSE 5001
+
+ENV ASPNETCORE_URLS=http://+:5000;https://+:5001
+
+RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
+USER appuser
+
 WORKDIR /app
 COPY --from=publish /app/publish .
 

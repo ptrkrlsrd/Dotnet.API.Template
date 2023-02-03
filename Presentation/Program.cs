@@ -1,26 +1,70 @@
-using System;
-using System.Text.Json;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
+using Template.API;
+using Template.API.Application.Behavior;
+using Template.API.Application.DI;
+using Template.API.Presentation.Configuration;
+using Template.API.Presentation.Middleware;
 
-namespace Template.API;
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+IWebHostEnvironment env = builder.Environment;
+IConfigurationBuilder configurationBuilder = new ConfigurationBuilder()
+    .SetBasePath(env.ContentRootPath)
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+    .AddEnvironmentVariables();
+        
+IConfigurationRoot configurationRoot = configurationBuilder.Build();
+var configuration = configurationRoot.Get<AppsettingsConfiguration>();
+builder.Services.Configure<AppsettingsConfiguration>(configurationRoot);
 
-public class Program
-{
-    public static string ApplicationName = "Template.API";
+builder.Services.AddControllers();
+builder.Services.AddSingleton(configuration);
+builder.Services.AddApplicationLayer();
 
-    public static void Main(string[] args) => CreateHostBuilder(args).Build().Run();
+bool tracingEnabled = configuration.Tracing.Enabled;
+if (tracingEnabled)
+    builder.Services.AddOpenTelemetry(configuration.ApplicationName, new []{ MediatrConstants.ActivitySourceName});
 
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-            .ConfigureLogging(builder => builder.AddJsonConsole(options =>
-            {
-                options.IncludeScopes = false;
-                options.TimestampFormat = "hh:mm:ss ";
-                options.JsonWriterOptions = new JsonWriterOptions { Indented = true };
-            }))
-            .ConfigureWebHostDefaults(webBuilder => webBuilder
-                .UseKestrel()
-                .UseStartup<Startup>());
-}
+if (tracingEnabled && configuration.Mediatr.Middleware.Tracing)
+    builder.Services.AddTracingMiddleware();
+
+if (configuration.Mediatr.Middleware.Logging)
+    builder.Services.AddLoggingMiddleware();
+
+builder.Services.AddResponseCompression(options => {
+    if (configuration.Server.Compression.UseBrotli)
+        options.Providers.Add<BrotliCompressionProvider>();
+    if (configuration.Server.Compression.UseGZip)
+        options.Providers.Add<GzipCompressionProvider>();
+});
+
+ApiVersion version = new(1, 0);
+builder.Services.AddApiVersioning(options => {
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.DefaultApiVersion = version;
+});
+        
+builder.Services.AddControllers(options => options.Filters.Add(typeof(ExceptionFilter)));
+builder.Services.AddSwaggerGen(options => {
+    var majorVersion = version.MajorVersion.ToString();
+    options.SwaggerDoc(majorVersion, new OpenApiInfo { Title = configuration.ApplicationName, Version = majorVersion });
+});
+
+WebApplication app = builder.Build();
+app.UseSwagger();
+app.UseSwaggerUI();
+
+app.UseWhen(_ => configuration.Server.UseHTTPS, a => {
+    a.UseHttpsRedirection();
+});
+
+app.UseAuthorization();
+app.MapControllers();
+
+app.Run();
