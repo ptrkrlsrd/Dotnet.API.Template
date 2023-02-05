@@ -1,7 +1,6 @@
 using System.Reflection;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Template.API.Application.Behavior;
 using Template.API.Application.Queries;
 using Template.Infrastructure;
@@ -19,13 +18,13 @@ public static class DependencyInjection
 
     public static IServiceCollection AddTracingMiddleware(this IServiceCollection services)
     {
-        services.TryAddTransient(typeof(IPipelineBehavior<,>), typeof(TracingBehavior<,>));
+        services.AddSingleton(typeof(IPipelineBehavior<,>), typeof(TracingBehavior<,>));
         return services;
     }
     
     public static IServiceCollection AddLoggingMiddleware(this IServiceCollection services)
     {
-        services.TryAddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+        services.AddSingleton(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
         return services;
     }
 }

@@ -8,7 +8,8 @@ using Template.API.Application.Queries;
 namespace Template.API.Presentation.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[ApiVersion("1.0")]
+[Route("api/v{version:apiVersion}/[controller]")]
 public class PingController : ControllerBase
 {
     private readonly ILogger<PingController> _logger;
