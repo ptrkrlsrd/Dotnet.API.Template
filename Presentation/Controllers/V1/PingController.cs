@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -8,7 +7,7 @@ using Template.API.Application.Queries;
 namespace Template.API.Presentation.Controllers;
 
 [ApiController]
-[ApiVersion("1.0")]
+[ApiVersion(Constants.ApiVersion)]
 [Route("api/v{version:apiVersion}/[controller]")]
 public class PingController : ControllerBase
 {
