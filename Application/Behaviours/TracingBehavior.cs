@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,16 +7,16 @@ namespace Template.API.Application.Behavior;
 
 public static class MediatrTracing
 {
-    public static ActivitySource ActivitySource = new ActivitySource(MediatrConstants.ActivitySourceName);
+    public static readonly ActivitySource ActivitySource = new(MediatrConstants.ActivitySourceName);
 }
 
-public class TracingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+internal sealed class TracingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
 {
-    public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
-        using var activity = MediatrTracing.ActivitySource.StartActivity(request?.ToString() ?? MediatrConstants.DefaultActivityName);
-        
-        var response = await next();
+        using Activity activity = MediatrTracing.ActivitySource.StartActivity(request?.ToString() ?? MediatrConstants.DefaultActivityName);
+
+        TResponse response = await next();
 
         return response;
     }

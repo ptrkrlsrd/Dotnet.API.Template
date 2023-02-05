@@ -57,14 +57,14 @@ builder.Services.AddSwaggerGen(options => {
 });
 
 WebApplication app = builder.Build();
-app.UseSwagger();
-app.UseSwaggerUI();
 
 app.UseWhen(_ => configuration.Server.UseHTTPS, a => {
     a.UseHttpsRedirection();
 });
 
 app.UseAuthorization();
+app.UseSwagger();
+app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{configuration.ApplicationName} {version}"));
 app.MapControllers();
 
 app.Run();

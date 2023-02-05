@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Template.API.Application.Behavior;
 
-public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+internal sealed class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
 {
     private readonly ILogger<LoggingBehavior<TRequest, TResponse>> _logger;
 
@@ -14,10 +14,10 @@ public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
         _logger = logger;
     }
 
-    public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Handling {Name} request", typeof(TRequest));
-        var response = await next();
+        TResponse response = await next();
         _logger.LogInformation("Handled {Name} response", typeof(TResponse));
 
         return response;
