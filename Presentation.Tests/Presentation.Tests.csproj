@@ -21,7 +21,6 @@
         <PackageReference Include="FakeItEasy" Version="7.1.0" />
         <PackageReference Include="FluentAssertions" Version="5.10.3" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="5.0.7" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
         <PackageReference Include="Moq" Version="4.16.1" />
@@ -37,7 +36,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Presentation\Presentation.csproj" />
+      <ProjectReference Include="../Presentation/Presentation.csproj" />
     </ItemGroup>
 
 </Project>
