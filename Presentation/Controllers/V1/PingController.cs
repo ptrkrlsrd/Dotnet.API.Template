@@ -11,12 +11,10 @@ namespace Template.API.Presentation.Controllers;
 [Route("api/v{version:apiVersion}/[controller]")]
 public class PingController : ControllerBase
 {
-    private readonly ILogger<PingController> _logger;
     private readonly IMediator _mediator;
 
-    public PingController(ILogger<PingController> logger, IMediator mediator)
+    public PingController(IMediator mediator)
     {
-        _logger = logger;
         _mediator = mediator;
     }
 

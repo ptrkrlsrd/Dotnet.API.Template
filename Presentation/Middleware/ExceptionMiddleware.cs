@@ -12,7 +12,6 @@ namespace Template.API.Presentation.Middleware;
 public class ExceptionFilter : IExceptionFilter
 {
     private readonly IWebHostEnvironment _hostingEnvironment;
-    private readonly IModelMetadataProvider _modelMetadataProvider;
     private readonly ILogger<ExceptionFilter> _logger;
 
     public ExceptionFilter(
@@ -22,7 +21,6 @@ public class ExceptionFilter : IExceptionFilter
     {
         _hostingEnvironment = hostingEnvironment;
         _logger = logger;
-        _modelMetadataProvider = modelMetadataProvider;
     }
 
     public void OnException(ExceptionContext context)
