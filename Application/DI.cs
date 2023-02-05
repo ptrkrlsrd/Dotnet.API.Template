@@ -18,13 +18,13 @@ public static class DependencyInjection
 
     public static IServiceCollection AddTracingMiddleware(this IServiceCollection services)
     {
-        services.AddSingleton(typeof(IPipelineBehavior<,>), typeof(TracingBehavior<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TracingBehavior<,>));
         return services;
     }
     
     public static IServiceCollection AddLoggingMiddleware(this IServiceCollection services)
     {
-        services.AddSingleton(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
         return services;
     }
 }
