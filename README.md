@@ -4,7 +4,7 @@
 * MediatR (with optional logging and tracing middleware)
 * OpenTelemetry (optional)
 ## Layers (simplified) 
-1. Presentation
+1. API
 2. Application
 3. Infrastructure
 
