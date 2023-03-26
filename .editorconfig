@@ -1,7 +1,7 @@
 [*.cs]
-csharp_style_var_for_built_in_types=true:silent
-csharp_style_var_when_type_is_apparent=true:silent
-csharp_style_var_elsewhere=true:silent
+csharp_style_var_for_built_in_types=warning:silent
+csharp_style_var_when_type_is_apparent=warning:silent
+csharp_style_var_elsewhere=false:silent
 
 ##
 ## StyleCop.Analyzers
@@ -20,25 +20,25 @@ dotnet_diagnostic.SA1633.severity = None
 dotnet_diagnostic.SA1122.severity = None
 
 # Variable '_' should begin with lower-case letter
-dotnet_diagnostic.SA1312.severity = None
+dotnet_diagnostic.SA1312.severity = warning
 
 # Parameter '_' should begin with lower-case letter
-dotnet_diagnostic.SA1313.severity = None
+dotnet_diagnostic.SA1313.severity = warning
 
 # Elements should be documented
 dotnet_diagnostic.SA1600.severity = None
 
 # Prefix local calls with this
-dotnet_diagnostic.SA1101.severity = None
+dotnet_diagnostic.SA1101.severity = warning
 
 # 'public' members should come before 'private' members
-dotnet_diagnostic.SA1202.severity = None
+dotnet_diagnostic.SA1202.severity = warning
 
 # Comments should contain text
 dotnet_diagnostic.SA1120.severity = None
 
 # Constant fields should appear before non-constant fields
-dotnet_diagnostic.SA1203.severity = None
+dotnet_diagnostic.SA1203.severity = warning
 
 # Field '_blah' should not begin with an underscore
 dotnet_diagnostic.SA1309.severity = None
@@ -50,7 +50,7 @@ dotnet_diagnostic.SA1413.severity = None
 dotnet_diagnostic.SA1201.severity = None
 
 # Elements should be separated by blank line
-dotnet_diagnostic.SA1516.severity = None
+dotnet_diagnostic.SA1516.severity = warning
 
 # The parameter spans multiple lines
 dotnet_diagnostic.SA1118.severity = None
@@ -111,7 +111,7 @@ dotnet_diagnostic.S3459.severity = None
 dotnet_diagnostic.S1144.severity = None
 
 # Remove this commented out code
-dotnet_diagnostic.S125.severity = None
+dotnet_diagnostic.S125.severity = warning
 
 # 'System.Exception' should not be thrown by user code
 dotnet_diagnostic.S112.severity = None

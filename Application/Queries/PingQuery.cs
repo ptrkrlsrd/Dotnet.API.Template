@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Template.API.Application.Queries;
 
-public class PingQuery : IRequest<string> { }
+public record PingQuery : IRequest<string>;
 
 public class PingQueryHandler : IRequestHandler<PingQuery, string>
 {

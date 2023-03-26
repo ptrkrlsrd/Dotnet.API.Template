@@ -12,7 +12,7 @@ public static class DependencyInjection
     public static IServiceCollection AddApplicationLayer(this IServiceCollection services) =>
         services
             .AddMediatR(typeof(PingQuery).GetTypeInfo().Assembly)
-            .RegisterInfrastructure(); // Fix this
+            .RegisterInfrastructure();
 
     public static IServiceCollection AddTracingMiddleware(this IServiceCollection services) => 
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TracingBehavior<,>));

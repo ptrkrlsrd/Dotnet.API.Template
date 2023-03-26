@@ -77,7 +77,7 @@ WebApplication NewApplication(WebApplicationBuilder webApplicationBuilder, Appse
     app.UseWhen(_ => appsettingsConfiguration.Server.UseHTTPS, a => { a.UseHttpsRedirection(); });
     app.UseAuthorization();
     app.UseSwagger();
-    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{appsettingsConfiguration.ApplicationName} {apiVersion}"));
+    app.UseSwaggerUI(c => c.SwaggerEndpoint($"/swagger/{apiVersion.ToString()}/swagger.json", $"{appsettingsConfiguration.ApplicationName} {apiVersion}"));
     app.MapControllers();
     return app;
 }
