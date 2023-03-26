@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["Presentation/Presentation.csproj", "Presentation/"]
-COPY ["Presentation.Tests/Presentation.Tests.csproj", "Presentation.Tests/"]
+COPY ["API/API.csproj", "API/"]
+COPY ["API.Tests/API.Tests.csproj", "API.Tests/"]
 COPY ["Application/Application.csproj", "Application/"]
 COPY ["Application.Tests/Application.Tests.csproj", "Application.Tests/"]
 COPY ["Infrastructure/Infrastructure.csproj", "Infrastructure/"]
