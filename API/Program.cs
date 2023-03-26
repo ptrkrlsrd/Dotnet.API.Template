@@ -31,10 +31,11 @@ WebApplicationBuilder SetupBuilder(WebApplicationBuilder newBuilder, ApiVersion 
     newBuilder.Services.AddApplicationLayer();
 
     bool tracingEnabled = conf.Tracing.Enabled;
-    if (tracingEnabled)
+    if (tracingEnabled) {
         newBuilder.Services.AddOpenTelemetry(conf.ApplicationName, new[] {
             MediatrConstants.ActivitySourceName
         });
+    }
 
     if (tracingEnabled && conf.Mediatr.Middleware.Tracing)
         newBuilder.Services.AddTracingMiddleware();
@@ -46,6 +47,7 @@ WebApplicationBuilder SetupBuilder(WebApplicationBuilder newBuilder, ApiVersion 
     {
         if (conf.Server.Compression.UseBrotli)
             options.Providers.Add<BrotliCompressionProvider>();
+        
         if (conf.Server.Compression.UseGZip)
             options.Providers.Add<GzipCompressionProvider>();
     });
@@ -68,13 +70,10 @@ WebApplicationBuilder SetupBuilder(WebApplicationBuilder newBuilder, ApiVersion 
     return newBuilder;
 }
 
-ApiVersion version = new(1, 0);
-WebApplicationBuilder builder = SetupBuilder(WebApplication.CreateBuilder(args), version, out AppsettingsConfiguration configuration);
-
 WebApplication NewApplication(WebApplicationBuilder webApplicationBuilder, AppsettingsConfiguration appsettingsConfiguration, ApiVersion apiVersion)
 {
     WebApplication app = webApplicationBuilder.Build();
-    app.UseWhen(_ => appsettingsConfiguration.Server.UseHTTPS, a => { a.UseHttpsRedirection(); });
+    app.UseWhen(_ => appsettingsConfiguration.Server.UseHTTPS, applicationBuilder => applicationBuilder.UseHttpsRedirection());
     app.UseAuthorization();
     app.UseSwagger();
     app.UseSwaggerUI(c => c.SwaggerEndpoint($"/swagger/{apiVersion.ToString()}/swagger.json", $"{appsettingsConfiguration.ApplicationName} {apiVersion}"));
@@ -82,5 +81,7 @@ WebApplication NewApplication(WebApplicationBuilder webApplicationBuilder, Appse
     return app;
 }
 
+ApiVersion version = new(1, 0);
+WebApplicationBuilder builder = SetupBuilder(WebApplication.CreateBuilder(args), version, out AppsettingsConfiguration configuration);
 WebApplication app = NewApplication(builder, configuration, version);
 app.Run();
