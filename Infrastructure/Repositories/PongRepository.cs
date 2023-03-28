@@ -2,10 +2,10 @@
 
 public interface IPongRepository
 {
-    string Get();
+    PongEntity Get();
 }
 
 public class PongRepository : IPongRepository
 {
-    public string Get() => "Pong";
+    public PongEntity Get() => new PongEntity("Pong");
 }
