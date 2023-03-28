@@ -22,5 +22,5 @@ public class QueryTests
         string x = await handler.Handle(query, new CancellationToken());
 
         Assert.Equal("Pong", x);
-        }
+    }
 }
